@@ -13,30 +13,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isScanned = false;
+
   void showCustomDialog(BuildContext context, String message) {
+    // This dialog box shows the scanned QR code details, it has an option to copy the data of the code to the clipboard.
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Custom Dialog'),
-          content: Text(message),
+          title: Center(
+              child: Column(
+            children: [
+              Text(
+                message,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: message));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Copied to clipboard!'),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Copy to Clipboard',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
+          )),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Clipboard.setData(ClipboardData(text: message));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Copied to clipboard!'),
-                  ),
-                );
+                setState(() {
+                  isScanned = false;
+                });
+                Navigator.of(context).pop();
               },
-              child: const Text('Copy to Clipboard'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Close'),
+              child: const Text(
+                'Close',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -65,14 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: AlignmentDirectional.center,
                 children: [
                   SizedBox(
-                    width: 295,
-                    height: 275,
+                    width: 295.w,
+                    height: 292.h,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: MobileScanner(
-                        onDetect: (barcodes) => {
-                          showCustomDialog(context,
-                              barcodes.barcodes.first.rawValue ?? "---")
+                        onDetect: (barcodes) {
+                          if (!isScanned) {
+                            // When the QR code is scanned it toggles the value of "isScanned" so that it won't scan the code more than once
+                            setState(() {
+                              isScanned = true;
+                            });
+
+                            // If the rawValue is null it will show "---" as rawValue
+
+                            showCustomDialog(context,
+                                barcodes.barcodes.first.rawValue ?? "---");
+                          }
                         },
                       ),
                     ),

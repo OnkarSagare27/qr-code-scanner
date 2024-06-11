@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         statusBarColor: Colors.transparent,
       ),
     );
+    // Using flutter_screenutil package for adaptive UI
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) {
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
             title: 'MOE',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: const Color(0xfff1efe5)),
               useMaterial3: true,
             ),
             routes: {"/home": (context) => const HomeScreen()},

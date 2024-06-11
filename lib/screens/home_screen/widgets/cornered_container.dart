@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// A custom overlay for the scanner
 class CorneredContainer extends StatelessWidget {
   const CorneredContainer({super.key});
 
